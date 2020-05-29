@@ -80,3 +80,21 @@ TEST_CASE("display_indented", "[bst]") {
                               "   |_ 12\n" );
     }
 }
+
+TEST_CASE("search max and min", "[bst]") {
+   bst<int> tree;
+   for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
+      tree.insert(i);
+   SECTION( "get min" ) {
+      REQUIRE(tree.min() == 1);// right key
+      REQUIRE(tree.min() != 6);// random key in tree
+      REQUIRE(tree.min() != 12);// max key in tree
+      REQUIRE(tree.min() != -1);// no key in tree
+   }
+   SECTION( "get max" ) {
+      REQUIRE(tree.max() == 12);// right key
+      REQUIRE(tree.max() != 1);// min key in tree
+      REQUIRE(tree.max() != 6);// random key in tree
+      REQUIRE(tree.max() != -1);// no key in tree
+   }
+}

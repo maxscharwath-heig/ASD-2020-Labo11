@@ -60,6 +60,7 @@ private:
     // fonctions récursives utilisées par les fonctions publiques ci-dessus
     // elles sont static car elles n'ont pas besoin d'accéder à l'attribut root.
 
+    static void erase(Node<Key> *&r, Key const &k);
     static void insert(Node<Key> *&r, Key const &k);
     static void to_stream(Node<Key> *r, std::ostream &s) noexcept;
 };
