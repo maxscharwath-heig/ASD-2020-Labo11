@@ -1,0 +1,1 @@
+add_executable(bst_tests_run bstTest.cpp catch_main.cpp)
