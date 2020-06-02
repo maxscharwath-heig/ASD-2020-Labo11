@@ -46,10 +46,23 @@ void bst<Key>::to_stream(Node<Key>* r, std::ostream& s) noexcept {
 template<typename Key>
 bst<Key>::bst() : root(nullptr) {
 }
+template<typename Key>
+bst<Key>::bst(bst const &other){
+   this->root = copy(other.root);
+}
 
 template<typename Key>
 bst<Key>::~bst() {
    // à mettre en oeuvre
+   destroy(root);
+}
+
+template<typename Key>
+bst<Key> & bst<Key>::operator=(bst const &other){
+   if (this == &other) return *this;
+   bst<Key> tmp{other};
+   std::swap(root, tmp.root);
+   return *this;
 }
 
 template<typename Key>
@@ -134,6 +147,26 @@ Node<Key>*& bst<Key>::sort_min(Node<Key>*& r) {
       Node<Key>*& tmp = r;
       r = r->right;
       return tmp;
+   }
+}
+
+template <typename Key>
+Node<Key>* bst<Key>::copy(Node<Key> *r){
+   if (r != nullptr){
+      Node<Key>* r2 = new Node<Key>{r->key, nullptr, nullptr};
+      r2->left  = copy(r->left);
+      r2->right = copy(r->right);
+      return r2;
+   }
+   return r;
+}
+
+template <typename Key>
+void bst<Key>::destroy(Node<Key> *&r){
+   if(r != nullptr){
+      destroy(r->left);
+      destroy(r->right);
+      delete r;
    }
 }
 

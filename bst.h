@@ -59,6 +59,9 @@ public:
 private:
     // fonctions récursives utilisées par les fonctions publiques ci-dessus
     // elles sont static car elles n'ont pas besoin d'accéder à l'attribut root.
+
+    static Node<Key>* copy(Node<Key> *r);
+    static void destroy(Node<Key> *&r);
     static void erase_min(Node<Key> *&r);
     static void erase(Node<Key> *&r, Key const &k);
     static Node<Key>*& sort_min(Node<Key> *&r);
