@@ -82,20 +82,29 @@ Key const& bst<Key>::max() const {
 
 template<typename Key>
 void bst<Key>::erase_min() {
-   if (root == nullptr) {
-      throw std::exception();
-   }
-   //TODO
+   erase_min(*root);
 }
 
 template<typename Key>
 void bst<Key>::erase_max() {
-   //TODO
+   erase(root, max());
 }
 
 template<typename Key>
 void bst<Key>::erase(const Key& k) noexcept {
+   erase(root, k);
+}
 
+template<typename Key>
+void bst<Key>::erase_min(Node<Key>*& r) {
+   if (r == nullptr) throw "Error";
+   else if (r->left != nullptr) {
+      erase_min(r->left);
+   } else {
+      Node<Key>* d = r->right;
+      delete r;
+      r = d;
+   }
 }
 
 template<typename Key>
@@ -105,8 +114,26 @@ void bst<Key>::erase(Node<Key>*& r, const Key& k) {
    else if (k > r->key) erase(r->right, k);
    else {// k est trouvé
       Node<Key>*& temp = r;
-      if(r->left == nullptr) r = r->right;
-      else if(r->right == nullptr)r = r->left;
+      if (r->left == nullptr) r = r->right;
+      else if (r->right == nullptr)r = r->left;
+      else {
+         Node<Key>*& m = sort_min(r->right);
+         m->right = r->right;
+         m->left = r->left;
+         r = m;
+      }
+      delete temp;
+   }
+}
+
+template<typename Key>
+Node<Key>*& bst<Key>::sort_min(Node<Key>*& r) {
+   if (r->left != nullptr) {
+      return sort_min(r->left);
+   } else {
+      Node<Key>*& tmp = r;
+      r = r->right;
+      return tmp;
    }
 }
 
