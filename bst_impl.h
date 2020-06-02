@@ -171,6 +171,13 @@ void bst<Key>::destroy(Node<Key> *&r){
 }
 
 template<typename Key>
+void bst<Key>::indented(Node<Key>*& r, std::ostream& s, std::string prefix) {
+   if(r == nullptr)return;
+   s << prefix << r->key << '\n';
+   prefix+="|_ ";
+}
+
+template<typename Key>
 std::ostream& operator<<(std::ostream& s, bst<Key> const& t) {
    bst<Key>::to_stream(t.root, s);
    return s;
