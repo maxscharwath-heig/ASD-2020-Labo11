@@ -105,10 +105,11 @@ TEST_CASE("copy constructor and operator =", "[bst]"){
       tree.insert(i);
    SECTION("copy constructor"){
       bst<int> tree2{tree};
-
+      REQUIRE(to_string(tree2) == to_string(tree));
    }
    SECTION("Operator ="){
       bst<int> tree2 = tree;
+      REQUIRE(to_string(tree2) == to_string(tree));
    }
 }
 

@@ -72,7 +72,8 @@ void bst<Key>::insert(Key const& k) {
 
 template<typename Key>
 void bst<Key>::display_indented(std::ostream& s) const noexcept {
-   s << "does not work yet obviously";
+   std::string prefix = "";
+   indent(root, s, prefix, false);
 }
 
 template<typename Key>
@@ -171,16 +172,34 @@ void bst<Key>::destroy(Node<Key> *&r){
 }
 
 template<typename Key>
-void bst<Key>::indented(Node<Key>*& r, std::ostream& s, std::string prefix) {
-   if(r == nullptr)return;
-   s << prefix << r->key << '\n';
-   prefix+="|_ ";
-}
-
-template<typename Key>
 std::ostream& operator<<(std::ostream& s, bst<Key> const& t) {
    bst<Key>::to_stream(t.root, s);
    return s;
+}
+
+template<typename Key>
+void bst<Key>::indent(Node<Key> *r, std::ostream &s, std::string& prefix, bool enfantDroit) {
+   s << prefix;
+   if (r != nullptr) s << r->key;
+   else s << ".";
+   s << "\n";
+
+   if (r == nullptr) return;
+
+   if (r->left != nullptr || r->right != nullptr) {
+
+      std::string prefixMod = prefix;
+
+      if (prefix.empty()) {
+         prefixMod = "|_ ";
+      }else if (enfantDroit){
+         prefixMod.insert(prefix.length() - 3, "   ");
+      }else{
+         prefixMod.insert(prefix.length() - 3, "|  ");
+      }
+      indent(r->left, s, prefixMod, false);
+      indent(r->right, s, prefixMod, true);
+   }
 }
 
 

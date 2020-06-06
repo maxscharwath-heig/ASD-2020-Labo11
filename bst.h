@@ -81,7 +81,7 @@ private:
 
    static Node<Key>*& sort_min(Node<Key>*& r);
 
-   static void indented(Node<Key>*& r, std::ostream& s, std::string prefix);
+   static void indent(Node<Key>* r, std::ostream& s, std::string& prefix, bool enfantDroit);
 
    static void insert(Node<Key>*& r, Key const& k);
 
