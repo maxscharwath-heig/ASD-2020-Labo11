@@ -150,3 +150,27 @@ TEST_CASE("linearize & balance", "[bst]"){
    }
 }
 
+TEST_CASE("contains", "[bst]"){
+   bst<int> tree;
+   for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
+      tree.insert(i);
+   SECTION("contains"){
+      REQUIRE(tree.contains(11) == true);
+      REQUIRE(tree.contains(9)  == false);
+      REQUIRE(tree.contains(12) == true);
+      REQUIRE(tree.contains(1)  == true);
+      REQUIRE(tree.contains(8)  == true);
+      REQUIRE(tree.contains(-1) == false);
+   }
+}
+
+TEST_CASE("visit_in_order", "[bst]"){
+   bst<int> tree;
+   for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
+      tree.insert(i);
+   SECTION("visit_in_order"){
+      std::string s;
+      tree.visit_in_order([&s](Node<int>* r){ s += " " + to_string(r->key) ; });
+      REQUIRE(s == " 1 2 3 4 5 6 7 8 10 11 12");
+   }
+}

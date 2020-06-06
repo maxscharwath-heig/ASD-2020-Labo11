@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 
+
 template<typename Key>
 struct Node {
    Key const key;
@@ -90,6 +91,9 @@ private:
    static void insert(Node<Key>*& r, Key const& k);
 
    static void to_stream(Node<Key>* r, std::ostream& s) noexcept;
+
+   template<typename Fn>
+   static void visit_in_order(Node<Key>* r, Fn f);
 };
 
 // toutes les fonctions sont définies dans le fichier inclus ci-dessous

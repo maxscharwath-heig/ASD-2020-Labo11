@@ -8,6 +8,7 @@
 // fonctions récursives n'ayant pas à connaitre root
 
 #include "bst.h"
+#include <exception>
 
 template<typename Key>
 void bst<Key>::insert(Node<Key>*& r, Key const& k) {
@@ -112,7 +113,7 @@ void bst<Key>::erase(const Key& k) noexcept {
 
 template<typename Key>
 void bst<Key>::erase_min(Node<Key>*& r) {
-   if (r == nullptr) throw "Error";
+   if (r == nullptr) throw std::logic_error("bst empty");
    else if (r->left != nullptr) {
       erase_min(r->left);
    } else {
@@ -245,15 +246,28 @@ void bst<Key>::indent(Node<Key> *r, std::ostream &s, std::string& prefix, bool e
 
 template<typename Key>
 bool bst<Key>::contains(const Key& k) const noexcept {
-   //TODO
-   return false;
+   auto r = root;
+   while(r != nullptr && r->key != k){
+      if (k < r->key) r = r->left;
+      else r = r->right;
+   }
+   return r != nullptr;
 }
 
 template<typename Key>
 template<typename Fn>
-void bst<Key>::visit_in_order(Fn f) const {
-   //TODO
+void bst<Key>::visit_in_order(Fn f) const{
+   visit_in_order(root, f);
 }
 
+template<typename Key>
+template<typename Fn>
+void bst<Key>::visit_in_order(Node<Key>* r, Fn f) {
+   if (r != nullptr){
+      visit_in_order(r->left, f);
+      f(r);
+      visit_in_order(r->right, f);
+   }
+}
 
 #endif //ASD1_LABS_2020_BST_IMPL_H

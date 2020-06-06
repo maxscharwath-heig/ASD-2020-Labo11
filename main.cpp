@@ -13,8 +13,4 @@ int main() {
 
     for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
         t.insert(i);
-
-    cout << t << endl;
-    t.erase(6);
-    cout << t << endl;
 }
