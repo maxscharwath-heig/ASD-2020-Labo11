@@ -73,7 +73,7 @@ void bst<Key>::insert(Key const& k) {
 
 template<typename Key>
 void bst<Key>::display_indented(std::ostream& s) const noexcept {
-   std::string prefix = "";
+   std::string prefix;
    indent(root, s, prefix, false);
 }
 
@@ -155,7 +155,7 @@ Node<Key>* bst<Key>::sort_min(Node<Key>*& r) {
 template<typename Key>
 Node<Key>* bst<Key>::copy(Node<Key>* r) {
    if (r != nullptr) {
-      Node<Key>* r2 = new Node<Key>{r->key, nullptr, nullptr};
+      auto* r2 = new Node<Key>{r->key, nullptr, nullptr};
       r2->left = copy(r->left);
       r2->right = copy(r->right);
       return r2;
@@ -241,6 +241,18 @@ void bst<Key>::indent(Node<Key> *r, std::ostream &s, std::string& prefix, bool e
       indent(r->left, s, prefixMod, false);
       indent(r->right, s, prefixMod, true);
    }
+}
+
+template<typename Key>
+bool bst<Key>::contains(const Key& k) const noexcept {
+   //TODO
+   return false;
+}
+
+template<typename Key>
+template<typename Fn>
+void bst<Key>::visit_in_order(Fn f) const {
+   //TODO
 }
 
 
