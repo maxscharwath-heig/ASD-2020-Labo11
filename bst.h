@@ -75,6 +75,10 @@ private:
 
    static void destroy(Node<Key>*& r);
 
+   static void linearize(Node<Key>* r, Node<Key>*& l, size_t n);
+
+   static Node<Key>* arborization(Node<Key>*& l, size_t n);
+
    static void erase_min(Node<Key>*& r);
 
    static void erase(Node<Key>*& r, Key const& k);

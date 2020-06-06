@@ -46,8 +46,9 @@ void bst<Key>::to_stream(Node<Key>* r, std::ostream& s) noexcept {
 template<typename Key>
 bst<Key>::bst() : root(nullptr) {
 }
+
 template<typename Key>
-bst<Key>::bst(bst const &other){
+bst<Key>::bst(bst const& other) {
    this->root = copy(other.root);
 }
 
@@ -58,7 +59,7 @@ bst<Key>::~bst() {
 }
 
 template<typename Key>
-bst<Key> & bst<Key>::operator=(bst const &other){
+bst<Key>& bst<Key>::operator=(bst const& other) {
    if (this == &other) return *this;
    bst<Key> tmp{other};
    std::swap(root, tmp.root);
@@ -151,25 +152,61 @@ Node<Key>*& bst<Key>::sort_min(Node<Key>*& r) {
    }
 }
 
-template <typename Key>
-Node<Key>* bst<Key>::copy(Node<Key> *r){
-   if (r != nullptr){
+template<typename Key>
+Node<Key>* bst<Key>::copy(Node<Key>* r) {
+   if (r != nullptr) {
       Node<Key>* r2 = new Node<Key>{r->key, nullptr, nullptr};
-      r2->left  = copy(r->left);
+      r2->left = copy(r->left);
       r2->right = copy(r->right);
       return r2;
    }
    return r;
 }
 
-template <typename Key>
-void bst<Key>::destroy(Node<Key> *&r){
-   if(r != nullptr){
+template<typename Key>
+void bst<Key>::linearize() noexcept {
+   linearize(root, nullptr, 0);
+}
+
+template<typename Key>
+void bst<Key>::balance() noexcept {
+   Node<Key>* l = nullptr;
+   size_t n = 0;
+   linearize(root, l, n);
+   root = arborization(l, n);
+}
+
+template<typename Key>
+void bst<Key>::destroy(Node<Key>*& r) {
+   if (r != nullptr) {
       destroy(r->left);
       destroy(r->right);
       delete r;
    }
 }
+
+template<typename Key>
+void bst<Key>::linearize(Node<Key>* r, Node<Key>*& l, size_t n) {
+   if (r == nullptr) return;
+   linearize(r->right, l, n);
+   r->right = l;
+   l = r;
+   n = n + 1;
+   linearize(r->left, l, n);
+   r->left = nullptr;
+}
+
+template<typename Key>
+Node<Key>* bst<Key>::arborization(Node<Key>*& l, size_t n) {
+   if (n == 0) return nullptr;
+   Node<Key>* rg = arborization(l, (n - 1) / 2);
+   Node<Key>* r = l;
+   r->left = rg;
+   l = l->right;
+   r->right = arborization(l, n / 2);
+   return r;
+}
+
 
 template<typename Key>
 std::ostream& operator<<(std::ostream& s, bst<Key> const& t) {

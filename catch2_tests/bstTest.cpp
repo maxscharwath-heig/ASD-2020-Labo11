@@ -113,3 +113,13 @@ TEST_CASE("copy constructor and operator =", "[bst]"){
    }
 }
 
+TEST_CASE("linearize", "[bst]"){
+   bst<int> tree;
+   for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
+      tree.insert(i);
+   SECTION("linearize"){
+      bst<int> tree2{tree};
+
+   }
+}
+
