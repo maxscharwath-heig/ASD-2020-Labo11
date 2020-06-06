@@ -15,6 +15,6 @@ int main() {
         t.insert(i);
 
     cout << t << endl;
-    t.balance();
+    t.erase(6);
     cout << t << endl;
 }

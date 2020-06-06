@@ -99,6 +99,27 @@ TEST_CASE("search max and min", "[bst]") {
    }
 }
 
+TEST_CASE("erase min, max and this", "[bst]") {
+   bst<int> tree;
+   for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
+      tree.insert(i);
+   SECTION( "erase_min()" ) {
+      bst<int> tree2{tree};
+      tree2.erase_min();
+      REQUIRE(to_string(tree2) == "8(4(2(.,3),6(5,7)),11(10,12))");
+   }
+   SECTION( "erase_max()" ) {
+      bst<int> tree2{tree};
+      tree2.erase_max();
+      REQUIRE(to_string(tree2) == "8(4(1(.,2(.,3)),6(5,7)),11(10,.))");
+   }
+   SECTION( "erase()" ) {
+      bst<int> tree2{tree};
+      tree2.erase(6);
+      REQUIRE(to_string(tree2) == "8(4(1(.,2(.,3)),7(5,.)),11(10,12))");
+   }
+}
+
 TEST_CASE("copy constructor and operator =", "[bst]"){
    bst<int> tree;
    for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
@@ -113,13 +134,19 @@ TEST_CASE("copy constructor and operator =", "[bst]"){
    }
 }
 
-TEST_CASE("linearize", "[bst]"){
+TEST_CASE("linearize & balance", "[bst]"){
    bst<int> tree;
    for(int i : { 8, 4, 1, 2, 3, 6, 5, 7, 11, 10, 12 })
       tree.insert(i);
    SECTION("linearize"){
       bst<int> tree2{tree};
-
+      tree2.linearize();
+      REQUIRE(to_string(tree2) == "1(.,2(.,3(.,4(.,5(.,6(.,7(.,8(.,10(.,11(.,12))))))))))");
+   }
+   SECTION("balance"){
+      bst<int> tree2{tree};
+      tree2.balance();
+      REQUIRE(to_string(tree2) == "6(3(1(.,2),4(.,5)),10(7(.,8),11(.,12)))");
    }
 }
 

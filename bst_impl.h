@@ -97,7 +97,7 @@ Key const& bst<Key>::max() const {
 
 template<typename Key>
 void bst<Key>::erase_min() {
-   erase_min(*root);
+   erase_min(root);
 }
 
 template<typename Key>
@@ -124,15 +124,15 @@ void bst<Key>::erase_min(Node<Key>*& r) {
 
 template<typename Key>
 void bst<Key>::erase(Node<Key>*& r, const Key& k) {
-   if (r == nullptr) {// k est absent
-   } else if (k < r->key) erase(r->left, k);
+   if (r == nullptr);// k est absent
+   else if (k < r->key) erase(r->left, k);
    else if (k > r->key) erase(r->right, k);
    else {// k est trouvé
-      Node<Key>*& temp = r;
+      auto temp = r;
       if (r->left == nullptr) r = r->right;
       else if (r->right == nullptr)r = r->left;
       else {
-         Node<Key>*& m = sort_min(r->right);
+         auto m = sort_min(r->right);
          m->right = r->right;
          m->left = r->left;
          r = m;
@@ -142,11 +142,11 @@ void bst<Key>::erase(Node<Key>*& r, const Key& k) {
 }
 
 template<typename Key>
-Node<Key>*& bst<Key>::sort_min(Node<Key>*& r) {
+Node<Key>* bst<Key>::sort_min(Node<Key>*& r) {
    if (r->left != nullptr) {
       return sort_min(r->left);
    } else {
-      Node<Key>*& tmp = r;
+      Node<Key>* tmp = r;
       r = r->right;
       return tmp;
    }
@@ -165,7 +165,10 @@ Node<Key>* bst<Key>::copy(Node<Key>* r) {
 
 template<typename Key>
 void bst<Key>::linearize() noexcept {
-   linearize(root, nullptr, 0);
+   Node<Key>* L = nullptr;
+   size_t n = 0;
+   linearize(root, L, n);
+   root = L;
 }
 
 template<typename Key>
@@ -186,24 +189,25 @@ void bst<Key>::destroy(Node<Key>*& r) {
 }
 
 template<typename Key>
-void bst<Key>::linearize(Node<Key>* r, Node<Key>*& l, size_t n) {
-   if (r == nullptr) return;
-   linearize(r->right, l, n);
-   r->right = l;
-   l = r;
-   n = n + 1;
-   linearize(r->left, l, n);
-   r->left = nullptr;
+void bst<Key>::linearize(Node<Key>* r, Node<Key>*& L, size_t& n) {
+   if (r != nullptr) {
+      linearize(r->right, L, n);
+      r->right = L;
+      L = r;
+      ++n;
+      linearize(r->left, L, n);
+      r->left = nullptr;
+   }
 }
 
 template<typename Key>
-Node<Key>* bst<Key>::arborization(Node<Key>*& l, size_t n) {
+Node<Key>* bst<Key>::arborization(Node<Key>*& L, size_t n) {
    if (n == 0) return nullptr;
-   Node<Key>* rg = arborization(l, (n - 1) / 2);
-   Node<Key>* r = l;
+   Node<Key>* rg = arborization(L, (n - 1) / 2);
+   Node<Key>* r = L;
    r->left = rg;
-   l = l->right;
-   r->right = arborization(l, n / 2);
+   L = L->right;
+   r->right = arborization(L, n / 2);
    return r;
 }
 
