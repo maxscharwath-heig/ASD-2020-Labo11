@@ -81,6 +81,7 @@ private:
    static Node<Key>* arborization(Node<Key>*& L, size_t n);
 
    static void erase_min(Node<Key>*& r);
+   static void erase_max(Node<Key>*& r);
 
    static void erase(Node<Key>*& r, Key const& k);
 

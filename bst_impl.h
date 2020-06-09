@@ -80,6 +80,7 @@ void bst<Key>::display_indented(std::ostream& s) const noexcept {
 
 template<typename Key>
 Key const& bst<Key>::min() const {
+   if (root == nullptr) throw std::exception();
    Node<Key>* m = root;
    while (m->left != nullptr) {
       m = m->left;
@@ -89,6 +90,7 @@ Key const& bst<Key>::min() const {
 
 template<typename Key>
 Key const& bst<Key>::max() const {
+   if (root == nullptr) throw std::exception();
    Node<Key>* m = root;
    while (m->right != nullptr) {
       m = m->right;
@@ -103,7 +105,7 @@ void bst<Key>::erase_min() {
 
 template<typename Key>
 void bst<Key>::erase_max() {
-   erase(root, max());
+   erase_max(root);
 }
 
 template<typename Key>
@@ -113,11 +115,23 @@ void bst<Key>::erase(const Key& k) noexcept {
 
 template<typename Key>
 void bst<Key>::erase_min(Node<Key>*& r) {
-   if (r == nullptr) throw std::logic_error("bst empty");
+   if (r == nullptr) throw std::exception();
    else if (r->left != nullptr) {
       erase_min(r->left);
    } else {
       Node<Key>* d = r->right;
+      delete r;
+      r = d;
+   }
+}
+
+template<typename Key>
+void bst<Key>::erase_max(Node<Key>*& r) {
+   if (r == nullptr) throw std::exception();
+   else if (r->right != nullptr) {
+      erase_max(r->right);
+   } else {
+      Node<Key>* d = r->left;
       delete r;
       r = d;
    }
@@ -186,6 +200,7 @@ void bst<Key>::destroy(Node<Key>*& r) {
       destroy(r->left);
       destroy(r->right);
       delete r;
+      r = nullptr;
    }
 }
 
@@ -220,7 +235,8 @@ std::ostream& operator<<(std::ostream& s, bst<Key> const& t) {
 }
 
 template<typename Key>
-void bst<Key>::indent(Node<Key> *r, std::ostream &s, std::string& prefix, bool enfantDroit) {
+void bst<Key>::indent(Node<Key>* r, std::ostream& s, std::string& prefix,
+                      bool enfantDroit) {
    s << prefix;
    if (r != nullptr) s << r->key;
    else s << ".";
@@ -234,9 +250,9 @@ void bst<Key>::indent(Node<Key> *r, std::ostream &s, std::string& prefix, bool e
 
       if (prefix.empty()) {
          prefixMod = "|_ ";
-      }else if (enfantDroit){
+      } else if (enfantDroit) {
          prefixMod.insert(prefix.length() - 3, "   ");
-      }else{
+      } else {
          prefixMod.insert(prefix.length() - 3, "|  ");
       }
       indent(r->left, s, prefixMod, false);
@@ -247,7 +263,7 @@ void bst<Key>::indent(Node<Key> *r, std::ostream &s, std::string& prefix, bool e
 template<typename Key>
 bool bst<Key>::contains(const Key& k) const noexcept {
    auto r = root;
-   while(r != nullptr && r->key != k){
+   while (r != nullptr && r->key != k) {
       if (k < r->key) r = r->left;
       else r = r->right;
    }
@@ -256,14 +272,14 @@ bool bst<Key>::contains(const Key& k) const noexcept {
 
 template<typename Key>
 template<typename Fn>
-void bst<Key>::visit_in_order(Fn f) const{
+void bst<Key>::visit_in_order(Fn f) const {
    visit_in_order(root, f);
 }
 
 template<typename Key>
 template<typename Fn>
 void bst<Key>::visit_in_order(Node<Key>* r, Fn f) {
-   if (r != nullptr){
+   if (r != nullptr) {
       visit_in_order(r->left, f);
       f(r);
       visit_in_order(r->right, f);
